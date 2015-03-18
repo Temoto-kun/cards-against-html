@@ -1,0 +1,33 @@
+nav
+  position: fixed
+  width: 100%
+  height: 100%
+  top: 0
+  left: -100%
+  padding-top: $navbar-height
+  padding-right: $navbar-height
+  &.visible
+    left: 0
+  .container-fluid
+    position: relative
+    height: 100%
+    width: 100%
+    overflow-y: auto
+    padding-top: $navbar-margin-bottom
+    background-color: $body-bg
+    > ul
+      margin-bottom: 15px
+  .nav-shade
+    position: absolute
+    width: 100%
+    height: 100%
+    top: 0
+    left: 0
+    display: block
+    background-color: transparentize(#000, 0.25)
+  ul
+    > li.divider
+      height: 1px
+      margin: (($line-height-computed / 2) - 1) 0
+      overflow: hidden
+      background-color: $dropdown-divider-bg

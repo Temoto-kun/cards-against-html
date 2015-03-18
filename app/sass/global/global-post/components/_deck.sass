@@ -1,0 +1,46 @@
+.panel-card-deck
+  margin-bottom: 15px
+  color: $card__text__color
+  a
+    &:hover, &:focus
+      text-decoration: none
+      color: inherit
+  .container-fluid
+    overflow-x: auto
+    overflow-y: hidden
+    padding: 0
+    ul
+      display: inline
+      white-space: nowrap
+      padding: 0
+      margin: 0
+      > *
+        display: inline-block
+        white-space: normal
+        & + li
+          margin-left: 15px
+  .panel.panel-card
+    margin: 0
+    background-color: $card__color
+    border-color: $card__border__color
+    color: $text-color
+    &:hover, &:focus
+      color: $card__text__color--hover
+      background-color: $card__color--hover
+  .active .panel.panel-card
+    color: $card__text__color--active
+    background-color: $card__color--active
+    border-color: $card__border__color--active
+    .selection-order
+      position: absolute
+      top: $card-height - 28px
+      right: 12px
+      font-size: 72px
+      opacity: 0.5
+      line-height: 0
+      font-weight: bold
+  @media (min-width: $screen-sm)
+    position: absolute
+    width: 100%
+    bottom: 0
+    left: 0

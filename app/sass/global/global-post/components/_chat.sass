@@ -1,0 +1,77 @@
+#main-container > .row
+  > .chatbox-column
+    .chatbox-container
+      position: relative
+      height: 100%
+      .chatbox
+        height: 100%
+        width: 100%
+        position: relative
+        .chatbox__log
+          height: 100%
+          padding-bottom: 165px
+          .chatbox__overflow
+            height: 100%
+            overflow-y: auto
+            > *
+              margin-bottom: 0
+            .chatbox__date-separator
+              padding: $padding-base-vertical $padding-base-horizontal
+              margin: $padding-base-vertical * 4 0
+              font-weight: 300
+              background-color: $panel-default-heading-bg
+              color: $panel-default-text
+              border-radius: $border-radius-base
+            .panel
+              box-shadow: none
+              .panel-heading
+                img
+                  border-radius: 16px
+              .panel-body
+                ul.greentext
+                  padding: 0
+                  list-style: none
+                  color: #789922
+                  > li:before
+                    content: '>'
+                p
+                  margin-bottom: 0
+                  margin-top: 8px
+                img
+                  max-width: 100%
+        .chatbox__input
+          position: absolute
+          width: 100%
+          height: 150px
+          bottom: 0
+          textarea
+            max-width: 100%
+            min-width: 100%
+            min-height: 86px
+            height: 86px
+            max-height: 86px
+    @media (max-width: $screen-xs-max)
+      position: fixed
+      top: 0
+      right: -100%
+      width: 100%
+      height: 100%
+      padding-top: $navbar-height
+      padding-left: $navbar-height
+      padding-right: 0
+      &.visible
+        right: 0
+      .chatbox-shade
+        position: absolute
+        width: 100%
+        height: 100%
+        top: 0
+        left: 0
+        display: block
+        background-color: transparentize(#000, 0.25)
+      .chatbox-container
+        padding-top: $navbar-margin-bottom
+        background-color: $body-bg
+    @media (min-width: $screen-sm)
+      .chatbox-container
+        padding: 0

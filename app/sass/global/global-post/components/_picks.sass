@@ -1,0 +1,15 @@
+.panel-card-picks
+  font-size: $game-font-size
+  line-height: $game-line-height
+  > div
+    height: 100%
+    width: 100%
+    overflow-y: auto
+  @media (min-width: $screen-sm)
+    padding-left: $card-width + $padding-base-horizontal
+  @media (max-width: $screen-xs-max)
+    margin-bottom: $padding-base-vertical
+  strong
+    color: $brand-primary
+  .list-group
+    margin: 0
