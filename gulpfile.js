@@ -32,6 +32,23 @@
             .pipe(gulp.dest("."));
     });
 
+    gulp.task("test", function() {
+        var utils = {
+            test: require("gulp-protractor")
+        };
+
+        gulp.src([
+            "app/tests/**/*.js"
+        ])
+            .pipe(utils.test.protractor({
+                configFile: "test/protractor.config.js",
+                args: ['--baseUrl', 'http://127.0.0.1:8000']
+            }))
+            .on("error", function() {
+                console.log(":P");
+            });
+    });
+
     gulp.task("default", ["styles", "scripts"]);
 
 })(require);
