@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-ng-app="cards">
 <head>
   <meta charset="UTF-8">
   <title>Cards Against Megukas</title>
@@ -15,15 +15,26 @@
 
 </div>
 
-<div class="container" id="main-container">
+<div class="container" id="main-container" data-ng-controller="CardsRoomCtrl as roomCtrl">
   <div class="row">
     <div class="col-sm-8">
       <div class="panel-cards">
-        <div class="panel-card-arena">
+        <div class="panel-card-arena" data-ng-controller="CardsPickCtrl as pickCtrl">
           <div class="panel-card-draw">
-            <div class="player-lists">
+            <div class="player-lists" data-ng-controller="CardsPlayerListCtrl as playerListCtrl">
               <div>
                 <ul class="player-list--active">
+                  <li class="player"
+                      data-ng-repeat="player in playerListCtrl.players | filter: player.active"
+                      data-ng-class="{
+                        'locked': player.game.locked,
+                        'judge': player.game.judge
+                      }">
+                    <img class="player__avatar" data-ng-src="{{ player.profile.avatar }}" src="http://placehold.it/32">
+                    <strong class="player__name" data-ng-bind="player.profile.name">Player 1</strong>
+                    <span class="badge player__wins" data-ng-bind="player.game.wins" data-ng-if="player.game.wins > 0">3</span>
+                  </li>
+                  <!--
                   <li class="player locked">
                     <img class="player__avatar" src="http://placehold.it/32">
                     <strong class="player__name">Player 1</strong>
@@ -58,18 +69,23 @@
                     <img class="player__avatar" src="http://placehold.it/32">
                     <strong class="player__name">Player 9</strong>
                   </li>
+                  -->
                 </ul>
               </div>
             </div>
             <div class="panel panel-default panel-card">
-              <div class="panel-body">
-                Lorem ipsum dolor sit _______ amet consectetur adipisicing _______ elit sed do eiusmod aliquam.
-              </div>
+              <div class="panel-body" data-cards-draw-card data-cards-draw-card-text="pickCtrl.drawCardText"></div>
             </div>
           </div>
           <div class="panel-card-picks">
             <div>
-              <div class="list-group">
+              <div class="list-group" data-ng-if="pickCtrl.allLocked">
+                <!--
+                <a href="#" data-ng-repeat="choice in choices" data-ng-bind-html-unsafe="ctrl.renderChoiceHtml('Lorem ipsum dolor sit {{}} amet consectetur adipisicing ___ elit sed do eiusmod aliquam.' choice)"></a>
+                -->
+                <a class="list-group-item" href="#" data-ng-repeat="choice in pickCtrl.choices" data-cards-choice="choice" data-cards-draw-card-text="pickCtrl.drawCardText"></a>
+
+                <!--
                 <a class="list-group-item" href="#">
                   Lorem ipsum dolor sit <strong>Cards Against</strong> amet consectetur adipisicing <strong>Megukas</strong> elit sed do eiusmod aliquam.
                 </a>
@@ -85,23 +101,24 @@
                 <a class="list-group-item" href="#">
                   Lorem ipsum dolor sit <strong>Cards Against</strong> amet consectetur adipisicing <strong>Megukas</strong> elit sed do eiusmod aliquam.
                 </a>
+                -->
               </div>
             </div>
           </div>
         </div>
-        <div class="panel-card-deck">
+        <div class="panel-card-deck" data-ng-controller="CardsDeckCtrl as deckCtrl">
           <div class="container-fluid">
             <ul>
-              <li class="active">
+              <li data-ng-repeat="card in deckCtrl.cards" data-ng-class="{ 'active': card.selectionOrder > -1 }" class="active">
                 <a href="#">
                   <div class="panel panel-default panel-card">
-                    <div class="panel-body">
-                      White card here.
-                    </div>
-                    <span class="selection-order">1</span>
+                    <div class="panel-body" data-ng-bind="card.text"></div>
+                    <span class="selection-order" data-ng-bind="card.selectionOrder" data-ng-if="card.selectionOrder > -1"></span>
                   </div>
                 </a>
-              </li><li class="active">
+              </li>
+              <!--
+              <li class="active">
                 <a href="#">
                   <div class="panel panel-default panel-card">
                     <div class="panel-body">
@@ -159,6 +176,7 @@
                   </div>
                 </a>
               </li>
+              -->
             </ul>
           </div>
         </div>
@@ -167,128 +185,39 @@
     <div class="col-sm-4 chatbox-column">
       <a href="#" class="chatbox-shade"></a>
       <div class="container-fluid chatbox-container">
-        <div class="chatbox">
+        <div class="chatbox" data-ng-controller="CardsChatboxCtrl as cboxCtrl">
           <div class="chatbox__log">
-            <div class="chatbox__overflow">
-              <div class="h3 text-right chatbox__date-separator">
-                Monday
-              </div>
-              <div class="panel-group">
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <a href="#" class="panel-title">
-                      <img src="http://placehold.it/32">
-                      <strong>Madoka</strong>
-                    </a>
-                  </div>
-                  <div class="panel-body">
-                    <time data-timestamp="345664567"></time>
-                    <div class="list-group-item-text">
-                      <p>
-                        Hello there
-                      </p>
-                      <p>
-                        This is a message
-                      </p>
+            <div class="chatbox__overflow" data-cards-log-scroll-focus>
+              <div data-ng-repeat="chatDay in cboxCtrl.chatDays">
+                <div class="h3 text-right chatbox__date-separator" data-ng-bind="chatDay.day"></div>
+                <div class="panel-group">
+                  <div data-ng-repeat="log in chatDay.logs | orderBy: timestamp" data-ng-class="{ 'unsent': !log.sent }" class="panel panel-default">
+                    <div class="panel-heading">
+                      <a href="#" class="panel-title">
+                        <img src="http://placehold.it/32" data-ng-src="{{ log.sender.avatar }}">
+                        <strong data-ng-bind="log.sender.name">Madoka</strong>
+                      </a>
                     </div>
-                  </div>
-                  <div class="panel-footer">
-                    <button class="btn btn-default">
-                      <i class="fa fa-quote-left"></i>
-                      <span class="hidden-sm hidden-xs">Quote</span>
-                    </button>
-                  </div>
-                </div>
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <a href="#" class="panel-title">
-                      <img src="http://placehold.it/32">
-                      <strong>Madoka</strong>
-                    </a>
-                  </div>
-                  <div class="panel-body">
-                    <time data-timestamp="345664567"></time>
-                    <div class="list-group-item-text">
-                      <ul class="greentext">
-                        <li>be me</li>
-                        <li>such meme</li>
-                        <li>very interface</li>
-                        <li>so game</li>
-                        <li>much based</li>
-                        <li>inb4 wow</li>
-                      </ul>
+                    <div class="panel-body">
+                      <time data-timestamp="{{ log.timestamp }}"></time>
+                      <div class="list-group-item-text" data-ng-bind-html="log.content.html"></div>
                     </div>
-                  </div>
-                  <div class="panel-footer">
-                    <button class="btn btn-default">
-                      <i class="fa fa-quote-left"></i>
-                      <span class="hidden-sm hidden-xs">Quote</span>
-                    </button>
-                  </div>
-                </div>
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <a href="#" class="panel-title">
-                      <img src="http://placehold.it/32">
-                      <strong>Madoka</strong>
-                    </a>
-                  </div>
-                  <div class="panel-body">
-                    <time data-timestamp="345664567"></time>
-                    <div class="list-group-item-text">
-                      <p>
-                        This is a placeholder meme
-                      </p>
-                      <img src="http://placehold.it/200x100">
+                    <div class="panel-footer">
+                      <button class="btn btn-default" data-ng-click="cboxCtrl.quote(log)">
+                        <i class="fa fa-quote-left"></i>
+                        <span class="hidden-sm hidden-xs">Quote</span>
+                      </button>
+                      <!--
+                      <button class="btn btn-default" data-ng-if="log.hasSingleImage()">
+                        <i class="fa fa-crop"></i>
+                        <span class="hidden-sm hidden-xs">Crop</span>
+                      </button>
+                      -->
                     </div>
-                  </div>
-                  <div class="panel-footer">
-                    <button class="btn btn-default">
-                      <i class="fa fa-quote-left"></i>
-                      <span class="hidden-sm hidden-xs">Quote</span>
-                    </button>
-                    <button class="btn btn-default">
-                      <i class="glyphicon glyphicon-picture"></i>
-                      <span class="hidden-sm hidden-xs">Copy</span>
-                    </button>
-                    <button class="btn btn-default">
-                      <i class="fa fa-crop"></i>
-                      <span class="hidden-sm hidden-xs">Crop</span>
-                    </button>
-                  </div>
-                </div>
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <a href="#" class="panel-title">
-                      <img src="http://placehold.it/32">
-                      <strong>Madoka</strong>
-                    </a>
-                  </div>
-                  <div class="panel-body">
-                    <time data-timestamp="345664567"></time>
-                    <div class="list-group-item-text">
-                      <p>
-                        that moment when playing megucas
-                      </p>
-                      <img src="app/img/meme.png" style="max-width: 100%">
-                    </div>
-                  </div>
-                  <div class="panel-footer">
-                    <button class="btn btn-default">
-                      <i class="fa fa-quote-left"></i>
-                      <span class="hidden-sm hidden-xs">Quote</span>
-                    </button>
-                    <button class="btn btn-default">
-                      <i class="glyphicon glyphicon-picture"></i>
-                      <span class="hidden-sm hidden-xs">Copy</span>
-                    </button>
-                    <button class="btn btn-default">
-                      <i class="fa fa-crop"></i>
-                      <span class="hidden-sm hidden-xs">Crop</span>
-                    </button>
                   </div>
                 </div>
               </div>
+              <!--
               <div class="h3 text-right chatbox__date-separator">
                 Tuesday
               </div>
@@ -408,21 +337,25 @@
                   </div>
                 </div>
               </div>
+              -->
             </div>
           </div>
           <div class="chatbox__input">
-            <form>
+            <form name="cboxInputCtrl" data-ng-submit="$event.preventDefault();">
               <div class="form-group">
-                <textarea class="form-control"></textarea>
+                <label>
+                  <span class="sr-only">Your message here.</span>
+                  <textarea data-ng-model="cboxCtrl.input.message" class="form-control" placeholder="Your message here." data-ng-keyup="cboxCtrl.checkKeyPress($event);" data-cards-input-focus></textarea>
+                </label>
               </div>
               <div class="form-group text-right">
-                <button class="btn btn-default">
+                <button class="btn btn-default" type="button">
                   <i class="glyphicon glyphicon-camera"></i>
                   <span class="hidden-sm hidden-xs">
                     Game snapshot
                   </span>
                 </button>
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" type="submit" data-ng-click="cboxCtrl.submit()">
                   <i class="glyphicon glyphicon-send"></i>
                   <span class="hidden-sm hidden-xs">
                     Send
@@ -452,6 +385,7 @@
 </nav>
 
 <script src="script.js"></script>
+<!--
 <script>
   $(function () {
     $('[data-toggle="offcanvas"]').click(function () {
@@ -459,6 +393,7 @@
     });
   });
 </script>
+-->
 
 </body>
 </html>
